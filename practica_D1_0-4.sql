@@ -8,7 +8,7 @@ DESC user_tables;
 conn hr/hr --conectando
 
 -- comenzando con ñla base de datos
-@ G:\c_programacion\c__back_end\talleres_cursos_diseno_de_bases_de-datos\programacion_base_de_datos_relacionales\oracle\curso_de_oracle_sql\Curso_Oracle_SQL_20H\Schema HR
+@ G:\c_programacion\c__back_end\talleres_cursos_diseno_de_bases_de-datos\programacion_base_de_datos_relacionales\oracle\curso_de_oracle_sql\Curso_Oracle_SQL_PLUS-20H\Schema_HR
 
 --podemos ver que hay un campo llamado table_name de la tabla user_tables;
 SELECT table_name FROM user_tables;
