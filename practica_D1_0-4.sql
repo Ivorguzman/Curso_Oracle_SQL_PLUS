@@ -1,28 +1,19 @@
-
-sqlplus SYSTEM --Estableciendo coneccion con el usuario
-
-
--- Para describir una tabla se utiliza «desc» o «describe».
-DESC user_tables;
-
-conn hr/hr --conectando
-
--- comenzando con ñla base de datos
-@ G:\c_programacion\c__back_end\talleres_cursos_diseno_de_bases_de-datos\programacion_base_de_datos_relacionales\oracle\curso_de_oracle_sql\Curso_Oracle_SQL_PLUS-20H\Schema_HR
-
+-- ???????????????????????????????????????
+@ G:\c_programacion\c__back_end\talleres_cursos_diseno_de_bases_de-datos\programacion_base_de_datos_relacionales\oracle\curso_de_oracle_sql\Curso_Oracle_SQL_PLUS-20H\Schema_HR qlplus SYSTEM --Iniciando sqlplus
+conn hr                                                           /hr                                                                                                                         --conectando
 --podemos ver que hay un campo llamado table_name de la tabla user_tables;
-SELECT table_name FROM user_tables;
-
+SELECT
+       table_name
+FROM
+       user_tables
+;
 
 -- Un campo que no tiene valor es NULL. Distinto es tener un carácter o varios caracteres en
 -- blanco « », que puede parecer que no hay nada pero hay espacios.
 -- La recomendación es insertar NULL cuando no se tenga valor y consultar como NULL.
 DESC employees;
-
-
-
-
 /*
+************************** SELECT , ||, SUBSTR(prametro1, parametro2, parametro3) *************************************
 SELECT [ALL|DISTINCT]
 { * | {columna | expresión} [[AS] alias], ... }
 FROM
@@ -34,7 +25,6 @@ condiciones_de_grupo]
 [ORDER BY
 columna [ASC|DESC][, …]]
 ;
-
 Primero, expliquemos la nomenclatura utilizada anteriormente. Puede que se encuentren
 con ella. Las palabras en mayúscula son palabras reservadas, es decir, parte del lenguaje. Los
 corchetes «[ ]» indican algo opcional. Mientras que las llaves «{ }» indican algo obligatorio. El
@@ -45,14 +35,12 @@ para separar elementos que pertenecen o están dentro de otro elemento, como es 
 tabla que pertenece a otro usuario si indica: nombre_usuario.nombre_tabla. Los puntos
 suspensivos indican que se puede repetir elementos. Y no olviden el punto y coma que termina la
 sentencia.
-
 ¿Qué tablas tenemos? Una forma de consultar las tablas que tiene nuestro usuario es
 realizando una consulta a USERS_TABLES. Y vemos que hay una tabla llamada: employees.
-
 */
 -- consult tabla de empleados mostrando todos los datos FROM. El asterisco indica que son todos los campos.
-SELECT * FROM employees;
-
+SELECT *
+FROM employees;
 
 /*
 El texto y la operación no están en ninguna tabla, por lo que no las vamos a consultar de
@@ -61,7 +49,7 @@ que haber algo después de SELECT (campos, sub-consultas) y algo después de FRO
 sub-consultas).
 */
 --  mostrar un texto y una operación matemática. Para estos casos se utiliza DUAL
-select 'esto es un texto', 2+2 from dual;
+select'esto es un texto' ,  2+2 from dual;
 
 /*
 Ahora vamos a realizar operaciones aritméticas con los campos. Por ejemplo, listemos el
@@ -69,12 +57,20 @@ apellido, el salario, el porcentaje de comisión, y el salario total (salario in
 comisión). El salario total es una columna más, lo que pasa es que el valor es obtenido por una
 operación entre más de un campo.
 */
+-- Metodo 1 (sin AS)
 SELECT
-last_name,
-salary,
-commission_pct,
-salary * (1 + commission_pct) "Salario total"
-FROM employees;
+       last_name "Nombre"        ,
+       salary "Salario"          ,
+       commission_pct "Comicion" ,
+       salary * (1 + commission_pct) "Salario total" -- alias("Salario total"==> entre comillas por tener espacios entre palabras)
+FROM  employees;
+
+-- Metodo 2 (con AS)
+SELECT last_name  AS Nombre ,
+       salary AS Salario  ,
+       (1 + commission_pct) AS Comicion ,
+       salary * (1 + commission_pct) AS "Salario total" -- alias("Salario total"==> entre comillas por tener espacios entre palabras)
+ FROM  employees;
 
 /*
 En la sentencia anterior vemos que podemos operar con los campos. Se utiliza paréntesis
@@ -89,6 +85,31 @@ usaremos para hacer referencia por funcionalidad. Y tomará mayor importancia la
 un alias.
 Para los nombres de los alias —y en general— es recomendado utilizar letras del alfabeto
 inglés, números, guión bajo. Y empezar con una letra.
-
 */
-pg_43
+--  concatenar existe una funciona llamada CONCAT pero vamos a concatenar de otra forma que se permite en Oracle, con dos pipes «||»,
+SELECT
+       lower(email) correo   ,
+       upper(last_name)  apellido ,
+       initcap(first_name || ' ' || last_name) AS nombre_completo -- alias con la palabra AS (nombre_completo  ==>SIN comillas  no tener espacios entre las palabras)
+FROM employees;
+
+/*
+Supongamos que queremos crear cuentas de correo y decidimos hacerlo a partir de un
+listado. Y lo que tenemos es solo una lista de nombres y apellidos. El formato que queremos es
+la primera letra del nombre seguido de un punto y el apellido, de tal forma que el resultado sea:
+«n.apellido@empresa.com». Utilizamos las columnas firts_name y last_name de la tabla de
+employees.
+Si ya sabemos concatenar, lo que nos falta es algo para extraer el primer carácter del
+nombre. Así que buscamos una función que haga eso. Encontraremos la función SUBSTR(prametro1, parametro2, parametro3) que
+recibe tres parámetros: la cadena de texto, la posición de inicio y el número de caracteres a
+extraer.
+*/
+-- Sin la funcion SUBSTR() pero con el primer nombre completo
+select first_name AS Nombre , last_name ||'@' ||'empresa.com' as Correo
+from employees;
+
+-- La funcion SUBSTR recibe tres parámetros:  SUBSTR(la cadena de texto, la posición de inicio, número de caracteres a extraer  )
+SELECT SUBSTR(first_name,1,1) ||'.' || last_name ||'@' ||'empresa.com'
+FROM employees;
+
+-- ** ORDER BY {expresion | posición | alias} [ASC | DESC] [NULLS FIRST|NULLS LAST][, ...] **
