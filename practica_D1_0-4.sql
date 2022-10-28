@@ -112,4 +112,99 @@ from employees;
 SELECT SUBSTR(first_name,1,1) ||'.' || last_name ||'@' ||'empresa.com'
 FROM employees;
 
--- ** ORDER BY {expresion | posición | alias} [ASC | DESC] [NULLS FIRST|NULLS LAST][, ...] **
+
+
+SELECT
+  department_id,
+  last_name,
+  commission_pct,
+  salary * ( 1 + commission_pct) AS "Salario total" 
+FROM employees;
+
+/*
+Bien, ¿quiénes tienen salario total? Solo los que tienen comisión. Entonces, ¿esto tiene que
+ver con los valores nulos? ¡Exacto! Al momento de operar con valores nulos el resultado es nulo.
+En nuestro caso al sumar NULL con uno el resultado es NULL; y al multiplicar NULL con el
+salario el resultado es NULL. Si no tiene comisión lo que queremos que salga es el valor del
+salario como salario total. Necesitamos algo que nos convierta ese valor nulo en un cero.
+Entonces la operación es correcta matemáticamente. Y ese algo es una función. La función que
+vamos a utilizar es NVL. Las funciones f(x) reciben uno o varios valores como parámetros y nos
+devuelven un valor. Se escribe el nombre de la función y entre paréntesis se escribe separados
+por comas los parámetros. En el caso de NVL, recibe dos parámetros: el primero es el valor a
+comparar si es nulo o no, el segundo parámetro es el valor que queremos devuelva si el primer
+parámetro es nulo. Como he dicho, si es nulo lo que nos interesa es un cero
+
+*/
+ 
+  
+-- **** FUNCION NVL(parametro1,parametr2) ==> retorna parametro1 si parametr2 es nulo
+-- convierte valores nulos en ceros  
+
+SELECT
+  department_id,
+  last_name,
+  commission_pct,
+  salary * (1+NVL(commission_pct,0)) AS "Salario total" 
+FROM employees;
+
+DESC employees;
+
+
+
+
+-- ** ORDER BY {expresion | posición | alias} [ASC | DESC] [NULLS FIRST|NULLS LAST][, ...] 
+
+-- Si queremos asegurar el orden se especifica la cláusula ORDER BY.
+
+--lo que se coloca después de ORDER BY es la lista de campos separados por coma  
+
+/*
+Si queremos asegurar el orden se especifica la cláusula ORDER BY. Como se ve en la
+imagen anterior, lo que se coloca después de ORDER BY es la lista de campos separados por
+coma; así como en la SELECT ya hemos puesto nombre de campos, expresiones y alias, eso
+mismo es a lo que hacemos referencia en la parte de ORDER BY, es decir, lo que tenemos en la
+parte de la SELECT. El orden por defecto es ascendente ASC, pero aunque sea por defecto lo
+mejor es ser explícitos y dejar claro lo que queremos: si ascendente ASC, o descendente DESC.
+Los valores nulos por defecto van al final cuando el orden es ASC, y al inicio cuando el orden es
+DESC. Y si se quiere cambiar la ubicación de los nulos se especifica: NULLS FIRST o NULLS
+LAST, según se quiere.
+
+*/
+
+  SELECT
+  department_id,
+  last_name,
+  salary * (1 + NVL(commission_pct, 0)) "Salario total"
+FROM employees
+ORDER BY
+  department_id ASC,
+  "Salario total" DESC,
+  3 ASC;
+  
+  /*
+  
+  En la SELECT anterior hay una referencia al nombre del campo: department_id, un alias:
+"Salario Total", y una posición: 3. Cuando tenemos un caso como el salario total, no podemos
+hacer referencia a ese campo o columna colocando toda la expresión tal y como está en la parte
+de selección, así que nos vemos en la obligación de utilizar un alias o por la posición que ocupa
+en la lista de campos de la SELECT haciendo referencia simplemente con un número. Ordenar
+por el salario no es lo mismo que ordenar por el salario total. Dicho esto último, se puede
+ordenar por campos que no se muestran.
+En la muestra de datos se puede ver cómo los departamentos van de forma ascendente: 60,
+70, 80; todos los 60 se ve que el salario va de forma descendente: 9000, 6000, 4800, 4800, 4200;
+y cuando coincide el salario: 4800, el apellido está en forma ascendente: Austin, Pataballa.
+  
+  
+  */
+  
+  
+  -- ************************** WHERE *******************************
+  
+  
+  /*
+    Sabemos ya seleccionar campos y manipularlos un poco con funciones o concatenando, y
+además ordenarlos pero siempre han sido todas las filas de la tabla. Para filtrar según
+determinadas condiciones se utiliza la cláusula WHERE, de esta forma escogemos qué filas
+seleccionar.  
+  
+  */
