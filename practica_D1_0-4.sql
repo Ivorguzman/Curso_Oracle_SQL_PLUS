@@ -86,12 +86,15 @@ un alias.
 Para los nombres de los alias —y en general— es recomendado utilizar letras del alfabeto
 inglés, números, guión bajo. Y empezar con una letra.
 */
+
+
 --  concatenar existe una funciona llamada CONCAT pero vamos a concatenar de otra forma que se permite en Oracle, con dos pipes «||»,
-SELECT
-       lower(email) correo   ,
-       upper(last_name)  apellido ,
-       initcap(first_name || ' ' || last_name) AS nombre_completo -- alias con la palabra AS (nombre_completo  ==>SIN comillas  no tener espacios entre las palabras)
-FROM employees;
+-- funcion INITCAP(str) returna strin con la primera letra em mayscula;
+-- funcion UPPER(parametro) retorna parametro en mayuscula
+ -- funcion lower(parametro) -- retorna  parametro in miniscula
+ -- alias con la palabra AS (nombre_completo  ==>SIN comillas  no tener espacios entre las palabras)
+ 
+SELECT lower(email) AS correo, upper(last_name) AS apellido ,  initcap(first_name|| ' ' ||last_name) AS nombre_completo FROM employees;
 
 /*
 Supongamos que queremos crear cuentas de correo y decidimos hacerlo a partir de un
@@ -108,10 +111,8 @@ extraer.
 select first_name AS Nombre , last_name ||'@' ||'empresa.com' as Correo
 from employees;
 
--- La funcion SUBSTR recibe tres parámetros:  SUBSTR(la cadena de texto, la posición de inicio, número de caracteres a extraer  )
-SELECT SUBSTR(first_name,1,1) ||'.' || last_name ||'@' ||'empresa.com'
-FROM employees;
-
+-- La funcion SUBSTR (recibe tres parámetros:  SUBSTR(la cadena de texto, la posición de inicio, número de caracteres a extraer)
+SELECT SUBSTR(first_name,1,1)||'.'||last_name||'@'||'empresa.com' FROM employees;
 
 
 SELECT
@@ -153,7 +154,7 @@ DESC employees;
 
 
 -- ** ORDER BY {expresion | posición | alias} [ASC | DESC] [NULLS FIRST|NULLS LAST][, ...] 
-
+-- funcion nvl(expr1,expr2) retorna expre1 si expre2 es null de lo contrario  retorna expr1
 -- Si queremos asegurar el orden se especifica la cláusula ORDER BY.
 
 --lo que se coloca después de ORDER BY es la lista de campos separados por coma  
@@ -198,7 +199,7 @@ y cuando coincide el salario: 4800, el apellido está en forma ascendente: Austi
   */
   
   
-  -- ************************** WHERE *******************************
+  -- ************************** WHERE pag.49 *******************************
   
   
   /*
@@ -208,3 +209,59 @@ determinadas condiciones se utiliza la cláusula WHERE, de esta forma escogemos 
 seleccionar.  
   
   */
+SELECT
+ department_id,
+ last_name
+FROM
+ employees
+WHERE
+ department_id = 10;
+ 
+ /*
+ En el caso anterior tenemos una condición. Y las condiciones son del estilo:
+ 
+campo operador valor  ==> department_id <> 10;
+
+Donde el operador puede ser: =, >=, >=, <, >, !=, <>, ~=. Los tres últimos son distintas
+formas de escribir: distinto o que no es igual. 
+
+Cuando tenemos que poner varias condiciones se colocan una tras otra unidas por: AND u OR según se quiera se cumplan ambas o una de ellas.
+
+ 
+ */
+ 
+--nos piden  los empleados de los departamentos 10, 20, 40 y 110.
+
+
+--a no va a dar ninguna fila, ni error. por usar el operador AND El empleado solo está en un departamento no en varios. 
+SELECT
+department_id,
+last_name
+FROM
+ employees
+WHERE
+department_id = 10 AND
+department_id = 20 AND
+department_id = 40 AND
+department_id = 110;
+
+
+/*
+
+Lo que realmente entendemos se quiere es los empleados que sean
+del 10, pero también los que son del 20, más los del 40 y los del 110, es decir, que están en uno
+de esos, no en todos*/
+
+-- Este si funciona por usar el oprardor OR
+SELECT
+department_id,
+last_name
+FROM
+employees
+WHERE
+department_id = 10 OR
+department_id = 20 OR
+department_id = 40 OR
+department_id = 110;
+
+-- ******* IN  pag.51 ************ 
