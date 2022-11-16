@@ -40,7 +40,7 @@ realizando una consulta a USERS_TABLES. Y vemos que hay una tabla llamada: emplo
 */
 -- consult tabla de empleados mostrando todos los datos FROM. El asterisco indica que son todos los campos.
 SELECT *
-FROM employees;
+FROM hr.employees;
 
 /*
 El texto y la operación no están en ninguna tabla, por lo que no las vamos a consultar de
@@ -264,4 +264,32 @@ department_id = 20 OR
 department_id = 40 OR
 department_id = 110;
 
--- ******* IN  pag.51 ************ 
+
+
+-- ******* IN  {campo | expresión} {FROM TABLE } [NOT] IN    lista_de_valores pag.51 ************ 
+
+
+-- Otra forma de escribir la anterior consulta es con el operador IN.
+SELECT department_id, last_name FROM employees
+WHERE department_id IN(10,20,40,110);
+
+
+
+-- IN
+SELECT department_id, last_name, first_name FROM employees 
+WHERE last_name IN ('King','Smith','Grant');
+
+-- NOT IN 
+SELECT department_id, last_name, first_name FROM employees 
+WHERE last_name NOT IN ('King','Smith','Grant');
+
+
+
+-- LIKE {campo | expresión} [NOT] LIKE {campo | expresión} [ESCAPE expresión]
+
+
+--Si queremos listar a los empleados cuyo apellido empieza por la letra «S» la consulta puede
+-- ser con la función SUBSTR que ya utilizamos antes
+
+SELECT department_id, last_name, first_name FROM employees
+WHERE SUBSTR(last_name,1,1)='S';
