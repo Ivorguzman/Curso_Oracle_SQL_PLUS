@@ -12,8 +12,13 @@ FROM
 -- blanco « », que puede parecer que no hay nada pero hay espacios.
 -- La recomendación es insertar NULL cuando no se tenga valor y consultar como NULL.
 DESC employees;
+
+
 /*
-************************** SELECT , ||, SUBSTR(prametro1, parametro2, parametro3) *************************************
+--  SELECT 
+-- //
+-- SUBSTR(prametro1, parametro2, parametro3)
+
 SELECT [ALL|DISTINCT]
 { * | {columna | expresión} [[AS] alias], ... }
 FROM
@@ -25,6 +30,9 @@ condiciones_de_grupo]
 [ORDER BY
 columna [ASC|DESC][, …]]
 ;
+
+Expicación:
+
 Primero, expliquemos la nomenclatura utilizada anteriormente. Puede que se encuentren
 con ella. Las palabras en mayúscula son palabras reservadas, es decir, parte del lenguaje. Los
 corchetes «[ ]» indican algo opcional. Mientras que las llaves «{ }» indican algo obligatorio. El
@@ -59,8 +67,8 @@ operación entre más de un campo.
 */
 -- Metodo 1 (sin AS)
 SELECT
-       last_name "Nombre"        ,
-       salary "Salario"          ,
+      last_name "Nombre" ,
+       salary "Salario",
        commission_pct "Comicion" ,
        salary * (1 + commission_pct) "Salario total" -- alias("Salario total"==> entre comillas por tener espacios entre palabras)
 FROM  employees;
@@ -199,10 +207,12 @@ y cuando coincide el salario: 4800, el apellido está en forma ascendente: Austi
   */
   
   
-  -- ************************** WHERE pag.49 *******************************
+
   
   
   /*
+   -- WHERE
+   
     Sabemos ya seleccionar campos y manipularlos un poco con funciones o concatenando, y
 además ordenarlos pero siempre han sido todas las filas de la tabla. Para filtrar según
 determinadas condiciones se utiliza la cláusula WHERE, de esta forma escogemos qué filas
