@@ -1,6 +1,8 @@
 -- ???????????????????????????????????????
-@ G:\c_programacion\c__back_end\talleres_cursos_diseno_de_bases_de-datos\programacion_base_de_datos_relacionales\oracle\curso_de_oracle_sql\Curso_Oracle_SQL_PLUS-20H\Schema_HR qlplus SYSTEM --Iniciando sqlplus
-conn hr                                                           /hr                                                                                                                         --conectando
+@g
+
+:\c_programacion\c__back_end\talleres_cursos_diseno_de_bases_de-datos\programacion_base_de_datos_relacionales\oracle\curso_de_oracle_sql\Curso_Oracle_SQL_PLUS-20H\Schema_HR qlplus SYSTEM --Iniciando sqlplus
+conn hr/hr                                                                                                                         --conectando
 --podemos ver que hay un campo llamado table_name de la tabla user_tables;
 SELECT
        table_name
@@ -57,7 +59,7 @@ que haber algo despuÃ©s de SELECT (campos, sub-consultas) y algo despuÃ©s de FRO
 sub-consultas).
 */
 --  mostrar un texto y una operaciÃ³n matemÃ¡tica. Para estos casos se utiliza DUAL
-select'esto es un texto' ,  2+2 from dual;
+select 'esto es un texto' ,  2+2 from dual;
 
 /*
 Ahora vamos a realizar operaciones aritmÃ©ticas con los campos. Por ejemplo, listemos el
@@ -71,14 +73,14 @@ SELECT
        salary "Salario",
        commission_pct "Comicion" ,
        salary * (1 + commission_pct) "Salario total" -- alias("Salario total"==> entre comillas por tener espacios entre palabras)
-FROM  employees;
+FROM  hr.employees;
 
 -- Metodo 2 (con AS)
 SELECT last_name  AS Nombre ,
        salary AS Salario  ,
        (1 + commission_pct) AS Comicion ,
        salary * (1 + commission_pct) AS "Salario total" -- alias("Salario total"==> entre comillas por tener espacios entre palabras)
- FROM  employees;
+ FROM  hr.employees;
 
 /*
 En la sentencia anterior vemos que podemos operar con los campos. Se utiliza parÃ©ntesis
@@ -102,7 +104,8 @@ inglÃ©s, nÃºmeros, guiÃ³n bajo. Y empezar con una letra.
  -- funcion lower(parametro) -- retorna  parametro in miniscula
  -- alias con la palabra AS (nombre_completo  ==>SIN comillas  no tener espacios entre las palabras)
  
-SELECT lower(email) AS correo, upper(last_name) AS apellido ,  initcap(first_name|| ' ' ||last_name) AS nombre_completo FROM employees;
+SELECT lower(email) AS correo, upper(last_name) AS apellido ,  initcap(first_name|| ' ' ||last_name) AS nombre_completo 
+FROM hr.employees;
 
 /*
 Supongamos que queremos crear cuentas de correo y decidimos hacerlo a partir de un
@@ -117,10 +120,11 @@ extraer.
 */
 -- Sin la funcion SUBSTR() pero con el primer nombre completo
 select first_name AS Nombre , last_name ||'@' ||'empresa.com' as Correo
-from employees;
+FROM hr.employees;
 
 -- La funcion SUBSTR (recibe tres parÃ¡metros:  SUBSTR(la cadena de texto, la posiciÃ³n de inicio, nÃºmero de caracteres a extraer)
-SELECT SUBSTR(first_name,1,1)||'.'||last_name||'@'||'empresa.com' FROM employees;
+SELECT SUBSTR(first_name,1,1)||'.'||last_name||'@'||'empresa.com' FROM hr.employees;
+
 
 
 SELECT
@@ -128,7 +132,8 @@ SELECT
   last_name,
   commission_pct,
   salary * ( 1 + commission_pct) AS "Salario total" 
-FROM employees;
+FROM hr.employees;
+
 
 /*
 Bien, Â¿quiÃ©nes tienen salario total? Solo los que tienen comisiÃ³n. Entonces, Â¿esto tiene que
@@ -154,9 +159,10 @@ SELECT
   last_name,
   commission_pct,
   salary * (1+NVL(commission_pct,0)) AS "Salario total" 
-FROM employees;
+FROM hr.employees;
 
-DESC employees;
+
+DESC hr.employees;
 
 
 
@@ -184,7 +190,7 @@ LAST, segÃºn se quiere.
   department_id,
   last_name,
   salary * (1 + NVL(commission_pct, 0)) "Salario total"
-FROM employees
+FROM hr.employees
 ORDER BY
   department_id ASC,
   "Salario total" DESC,
@@ -222,8 +228,7 @@ seleccionar.
 SELECT
  department_id,
  last_name
-FROM
- employees
+FROM hr.employees
 WHERE
  department_id = 10;
  
@@ -247,8 +252,7 @@ Cuando tenemos que poner varias condiciones se colocan una tras otra unidas por:
 SELECT
 department_id,
 last_name
-FROM
- employees
+FROM hr.employees
 WHERE
 department_id = 10 AND
 department_id = 20 AND
@@ -266,8 +270,7 @@ de esos, no en todos*/
 SELECT
 department_id,
 last_name
-FROM
-employees
+FROM hr.employees
 WHERE
 department_id = 10 OR
 department_id = 20 OR
@@ -280,13 +283,13 @@ department_id = 110;
 
 
 -- Otra forma de escribir la anterior consulta es con el operador IN.
-SELECT department_id, last_name FROM employees
+SELECT department_id, last_name FROM hr.employees
 WHERE department_id IN(10,20,40,110);
 
 
 
 -- IN
-SELECT department_id, last_name, first_name FROM employees 
+SELECT department_id, last_name, first_name FROM hr.employees 
 WHERE last_name IN ('King','Smith','Grant');
 
 -- NOT IN 
@@ -295,11 +298,45 @@ WHERE last_name NOT IN ('King','Smith','Grant');
 
 
 
--- LIKE {campo | expresiÃ³n} [NOT] LIKE {campo | expresiÃ³n} [ESCAPE expresiÃ³n]
+-- operador LIKE {campo | expresiÃ³n} [NOT] LIKE {campo | expresiÃ³n} [ESCAPE expresiÃ³n]
 
 
 --Si queremos listar a los empleados cuyo apellido empieza por la letra Â«SÂ» la consulta puede
 -- ser con la funciÃ³n SUBSTR que ya utilizamos antes
 
-SELECT department_id, last_name, first_name FROM employees
+SELECT department_id, last_name, first_name FROM hr.employees
 WHERE SUBSTR(last_name,1,1)='S';
+
+SELECT department_id, last_name, first_name FROM hr.employees
+WHERE SUBSTR(last_name,1,1)='S';
+
+SELECT department_id,last_name,first_name FROM HR.employees
+WHERE last_name LIKE 'S%';
+
+SELECT department_id,last_name,first_name  FROM HR.employees
+WHERE last_name LIKE '%i';
+
+SELECT EMPLOYEE_ID,LAST_NAME,FIRST_NAME FROM hr.employees
+WHERE LAST_NAME  LIKE '%i%';
+
+-- empiece por una «S» y tengan una «i» en cualquier parte
+SELECT EMPLOYEE_ID,LAST_NAME,FIRST_NAME FROM hr.employees
+WHERE LAST_NAME  LIKE 'S%i%';
+
+-- la tercera letra sea una «t» y la última una «s»
+SELECT EMPLOYEE_ID,LAST_NAME,FIRST_NAME FROM hr.employees
+WHERE LAST_NAME  LIKE '%__t%s';
+
+-- NOT LIKE
+-- la tercera letra no sea una «t» y la última  no sea una «s»
+SELECT EMPLOYEE_ID,LAST_NAME,FIRST_NAME FROM hr.employees
+WHERE LAST_NAME NOT LIKE '%__t%s';
+
+
+-- *** ESCAPE  escapar un caracter *** Pag.54
+
+DESCRIBE hr.employees;
+
+DESCRIBE  hr.user_tab_columns;
+
+
