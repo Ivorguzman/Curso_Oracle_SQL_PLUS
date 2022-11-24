@@ -1,18 +1,20 @@
 -- ???????????????????????????????????????
 @g
 
-:\c_programacion\c__back_end\talleres_cursos_diseno_de_bases_de-datos\programacion_base_de_datos_relacionales\oracle\curso_de_oracle_sql\Curso_Oracle_SQL_PLUS-20H\Schema_HR qlplus SYSTEM --Iniciando sqlplus
-conn hr/hr                                                                                                                         --conectando
+: \ c_programacion \ c__back_end \ talleres_cursos_diseno_de_bases_de - datos \ programacion_base_de_datos_relacionales \ oracle
+\ curso_de_oracle_sql \ curso_oracle_sql_plus - 20H \ schema_hr qlplus system --Iniciando sqlplus
+conn hr / hr                                                                                                                         --conectando
 --podemos ver que hay un campo llamado table_name de la tabla user_tables;
+
 SELECT
-       table_name
+ table_name
 FROM
-       user_tables
-;
+ user_tables;
 
 -- Un campo que no tiene valor es NULL. Distinto es tener un carácter o varios caracteres en
 -- blanco « », que puede parecer que no hay nada pero hay espacios.
 -- La recomendación es insertar NULL cuando no se tenga valor y consultar como NULL.
+
 DESC employees;
 
 
@@ -49,8 +51,11 @@ sentencia.
 realizando una consulta a USERS_TABLES. Y vemos que hay una tabla llamada: employees.
 */
 -- consult tabla de empleados mostrando todos los datos FROM. El asterisco indica que son todos los campos.
-SELECT *
-FROM hr.employees;
+
+SELECT
+ *
+FROM
+ hr.employees;
 
 /*
 El texto y la operación no están en ninguna tabla, por lo que no las vamos a consultar de
@@ -59,7 +64,12 @@ que haber algo después de SELECT (campos, sub-consultas) y algo después de FRO
 sub-consultas).
 */
 --  mostrar un texto y una operación matemática. Para estos casos se utiliza DUAL
-select 'esto es un texto' ,  2+2 from dual;
+
+SELECT
+ 'esto es un texto',
+ 2 + 2
+FROM
+ dual;
 
 /*
 Ahora vamos a realizar operaciones aritméticas con los campos. Por ejemplo, listemos el
@@ -68,19 +78,24 @@ comisión). El salario total es una columna más, lo que pasa es que el valor es
 operación entre más de un campo.
 */
 -- Metodo 1 (sin AS)
+
 SELECT
-      last_name "Nombre" ,
-       salary "Salario",
-       commission_pct "Comicion" ,
-       salary * (1 + commission_pct) "Salario total" -- alias("Salario total"==> entre comillas por tener espacios entre palabras)
-FROM  hr.employees;
+ last_name        "Nombre",
+ salary           "Salario",
+ commission_pct   "Comicion",
+ salary * ( 1 + commission_pct ) "Salario total" -- alias("Salario total"==> entre comillas por tener espacios entre palabras)
+FROM
+ hr.employees;
 
 -- Metodo 2 (con AS)
-SELECT last_name  AS Nombre ,
-       salary AS Salario  ,
-       (1 + commission_pct) AS Comicion ,
-       salary * (1 + commission_pct) AS "Salario total" -- alias("Salario total"==> entre comillas por tener espacios entre palabras)
- FROM  hr.employees;
+
+SELECT
+ last_name   AS nombre,
+ salary      AS salario,
+ ( 1 + commission_pct ) AS comicion,
+ salary * ( 1 + commission_pct ) AS "Salario total" -- alias("Salario total"==> entre comillas por tener espacios entre palabras)
+FROM
+ hr.employees;
 
 /*
 En la sentencia anterior vemos que podemos operar con los campos. Se utiliza paréntesis
@@ -103,9 +118,14 @@ inglés, números, guión bajo. Y empezar con una letra.
 -- funcion UPPER(parametro) retorna parametro en mayuscula
  -- funcion lower(parametro) -- retorna  parametro in miniscula
  -- alias con la palabra AS (nombre_completo  ==>SIN comillas  no tener espacios entre las palabras)
- 
-SELECT lower(email) AS correo, upper(last_name) AS apellido ,  initcap(first_name|| ' ' ||last_name) AS nombre_completo 
-FROM hr.employees;
+
+SELECT
+ lower(email) AS correo,
+ upper(last_name) AS apellido,
+ initcap(first_name || ' '
+                       || last_name) AS nombre_completo
+FROM
+ hr.employees;
 
 /*
 Supongamos que queremos crear cuentas de correo y decidimos hacerlo a partir de un
@@ -119,20 +139,32 @@ recibe tres parámetros: la cadena de texto, la posición de inicio y el número
 extraer.
 */
 -- Sin la funcion SUBSTR() pero con el primer nombre completo
-select first_name AS Nombre , last_name ||'@' ||'empresa.com' as Correo
-FROM hr.employees;
-
--- La funcion SUBSTR (recibe tres parámetros:  SUBSTR(la cadena de texto, la posición de inicio, número de caracteres a extraer)
-SELECT SUBSTR(first_name,1,1)||'.'||last_name||'@'||'empresa.com' FROM hr.employees;
-
-
 
 SELECT
-  department_id,
-  last_name,
-  commission_pct,
-  salary * ( 1 + commission_pct) AS "Salario total" 
-FROM hr.employees;
+ first_name AS nombre,
+ last_name || '@'
+              || 'empresa.com' AS correo
+FROM
+ hr.employees;
+
+-- La funcion SUBSTR (recibe tres parámetros:  SUBSTR(la cadena de texto, la posición de inicio, número de caracteres a extraer)
+
+SELECT
+ substr(first_name, 1, 1)
+ || '.'
+    || last_name
+       || '@'
+          || 'empresa.com'
+FROM
+ hr.employees;
+
+SELECT
+ department_id,
+ last_name,
+ commission_pct,
+ salary * ( 1 + commission_pct ) AS "Salario total"
+FROM
+ hr.employees;
 
 
 /*
@@ -155,12 +187,12 @@ parámetro es nulo. Como he dicho, si es nulo lo que nos interesa es un cero
 -- convierte valores nulos en ceros  
 
 SELECT
-  department_id,
-  last_name,
-  commission_pct,
-  salary * (1+NVL(commission_pct,0)) AS "Salario total" 
-FROM hr.employees;
-
+ department_id,
+ last_name,
+ commission_pct,
+ salary * ( 1 + nvl(commission_pct, 0) ) AS "Salario total"
+FROM
+ hr.employees;
 
 DESC hr.employees;
 
@@ -186,15 +218,16 @@ LAST, según se quiere.
 
 */
 
-  SELECT
-  department_id,
-  last_name,
-  salary * (1 + NVL(commission_pct, 0)) "Salario total"
-FROM hr.employees
+SELECT
+ department_id,
+ last_name,
+ salary * ( 1 + nvl(commission_pct, 0) ) "Salario total"
+FROM
+ hr.employees
 ORDER BY
-  department_id ASC,
-  "Salario total" DESC,
-  3 ASC;
+ department_id ASC,
+ "Salario total" DESC,
+ 3 ASC;
   
   /*
   
@@ -225,10 +258,12 @@ determinadas condiciones se utiliza la cláusula WHERE, de esta forma escogemos 
 seleccionar.  
   
   */
+
 SELECT
  department_id,
  last_name
-FROM hr.employees
+FROM
+ hr.employees
 WHERE
  department_id = 10;
  
@@ -249,15 +284,17 @@ Cuando tenemos que poner varias condiciones se colocan una tras otra unidas por:
 
 
 --a no va a dar ninguna fila, ni error. por usar el operador AND El empleado solo está en un departamento no en varios. 
+
 SELECT
-department_id,
-last_name
-FROM hr.employees
+ department_id,
+ last_name
+FROM
+ hr.employees
 WHERE
-department_id = 10 AND
-department_id = 20 AND
-department_id = 40 AND
-department_id = 110;
+ department_id = 10
+ AND department_id = 20
+     AND department_id = 40
+         AND department_id = 110;
 
 
 /*
@@ -267,15 +304,17 @@ del 10, pero también los que son del 20, más los del 40 y los del 110, es deci
 de esos, no en todos*/
 
 -- Este si funciona por usar el oprardor OR
+
 SELECT
-department_id,
-last_name
-FROM hr.employees
+ department_id,
+ last_name
+FROM
+ hr.employees
 WHERE
-department_id = 10 OR
-department_id = 20 OR
-department_id = 40 OR
-department_id = 110;
+ department_id = 10
+ OR department_id = 20
+    OR department_id = 40
+       OR department_id = 110;
 
 
 
@@ -283,18 +322,51 @@ department_id = 110;
 
 
 -- Otra forma de escribir la anterior consulta es con el operador IN.
-SELECT department_id, last_name FROM hr.employees
-WHERE department_id IN(10,20,40,110);
+
+SELECT
+ department_id,
+ last_name
+FROM
+ hr.employees
+WHERE
+ department_id IN (
+  10,
+  20,
+  40,
+  110
+ );
 
 
 
 -- IN
-SELECT department_id, last_name, first_name FROM hr.employees 
-WHERE last_name IN ('King','Smith','Grant');
+
+SELECT
+ department_id,
+ last_name,
+ first_name
+FROM
+ hr.employees
+WHERE
+ last_name IN (
+  'King',
+  'Smith',
+  'Grant'
+ );
 
 -- NOT IN 
-SELECT department_id, last_name, first_name FROM employees 
-WHERE last_name NOT IN ('King','Smith','Grant');
+
+SELECT
+ department_id,
+ last_name,
+ first_name
+FROM
+ employees
+WHERE
+ last_name NOT IN (
+  'King',
+  'Smith',
+  'Grant'
+ );
 
 
 
@@ -304,39 +376,101 @@ WHERE last_name NOT IN ('King','Smith','Grant');
 --Si queremos listar a los empleados cuyo apellido empieza por la letra «S» la consulta puede
 -- ser con la función SUBSTR que ya utilizamos antes
 
-SELECT department_id, last_name, first_name FROM hr.employees
-WHERE SUBSTR(last_name,1,1)='S';
+SELECT
+ department_id,
+ last_name,
+ first_name
+FROM
+ hr.employees
+WHERE
+ substr(last_name, 1, 1) = 'S';
 
-SELECT department_id, last_name, first_name FROM hr.employees
-WHERE SUBSTR(last_name,1,1)='S';
+SELECT
+ department_id,
+ last_name,
+ first_name
+FROM
+ hr.employees
+WHERE
+ substr(last_name, 1, 1) = 'S';
 
-SELECT department_id,last_name,first_name FROM HR.employees
-WHERE last_name LIKE 'S%';
+SELECT
+ department_id,
+ last_name,
+ first_name
+FROM
+ hr.employees
+WHERE
+ last_name LIKE 'S%';
 
-SELECT department_id,last_name,first_name  FROM HR.employees
-WHERE last_name LIKE '%i';
+SELECT
+ department_id,
+ last_name,
+ first_name
+FROM
+ hr.employees
+WHERE
+ last_name LIKE '%i';
 
-SELECT EMPLOYEE_ID,LAST_NAME,FIRST_NAME FROM hr.employees
-WHERE LAST_NAME  LIKE '%i%';
+SELECT
+ employee_id,
+ last_name,
+ first_name
+FROM
+ hr.employees
+WHERE
+ last_name LIKE '%i%';
 
 -- empiece por una �S� y tengan una �i� en cualquier parte
-SELECT EMPLOYEE_ID,LAST_NAME,FIRST_NAME FROM hr.employees
-WHERE LAST_NAME  LIKE 'S%i%';
+
+SELECT
+ employee_id,
+ last_name,
+ first_name
+FROM
+ hr.employees
+WHERE
+ last_name LIKE 'S%i%';
 
 -- la tercera letra sea una �t� y la �ltima una �s�
-SELECT EMPLOYEE_ID,LAST_NAME,FIRST_NAME FROM hr.employees
-WHERE LAST_NAME  LIKE '%__t%s';
+
+SELECT
+ employee_id,
+ last_name,
+ first_name
+FROM
+ hr.employees
+WHERE
+ last_name LIKE '%__t%s';
 
 -- NOT LIKE
 -- la tercera letra no sea una �t� y la �ltima  no sea una �s�
-SELECT EMPLOYEE_ID,LAST_NAME,FIRST_NAME FROM hr.employees
-WHERE LAST_NAME NOT LIKE '%__t%s';
+
+SELECT
+ employee_id,
+ last_name,
+ first_name
+FROM
+ hr.employees
+WHERE
+ last_name NOT LIKE '%__t%s';
 
 
 -- *** ESCAPE  escapar un caracter *** Pag.54
 
+-- listar los nombres de las columnas de la tabla de empleados que tienen un gui�n bajo.
+
+DESCRIBE hr.user_tab_columns;
+
 DESCRIBE hr.employees;
 
-DESCRIBE  hr.user_tab_columns;
+
+
+
+
+
+
+
+
 
 
